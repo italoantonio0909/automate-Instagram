@@ -68,26 +68,27 @@ def automate_posts(*, data, username_instagram: str):
 
 
 
-def automate_comment(*, browser,username:str):
+def automate_comment(*, browser, username: str):
+    
     comment = f"@{username} Hey men, I'm an automation software, I'm using your profile for my neural learning"
     
     posts_elements_xpath    = "//a[contains(@href, '/p/')]"
     textarea_comment_xpath = "//textarea[contains(@placeholder, 'Añade un comentario...')]"
-    button_comment_xpath = "//button[@type='submit']"
-    
-    post_elements = browser.find_elements_by_xpath(posts_elements_xpath)
-    
-    if len(post_elements) > 0:
-        for post in post_elements:
-            time.sleep(2)
-            url_post=post.get_attribute('href')
-            browser.get(url_post)
-            time.sleep(3)
-            textarea_comment = browser.find_element_by_xpath(textarea_comment_xpath)
-            textarea_comment.send_keys(comment)
-            time.sleep(3)
-            button_submit=browser.find_element_by_xpath(button_comment_xpath)
-            #button_submit.click()
+    button_comment_xpath = "button[type='submit']"
+
+    post_element = browser.find_elements_by_xpath(posts_elements_xpath)
+
+    if len(post_element) > 0:
+        time.sleep(2)
+        url_post=post_element[0].get_attribute('href')
+        browser.get(url_post)
+
+        time.sleep(1)
+        textarea_comment = browser.find_element_by_xpath(textarea_comment_xpath)
+        button_submit = browser.find_element_by_css_selector(button_comment_xpath)
+        textarea_comment.send_keys(comment)
+        time.sleep(2)
+        button_submit.click()
 
 
 
@@ -148,12 +149,11 @@ if __name__ == '__main__':
     # Profile
     browser.get(f'{instagram_url}{username_instagram}/')
     
+    time.sleep(3)
+    automate_comment(browser=browser,username=username_instagram)
+    
     # Images or videos
     #time.sleep(3)
-    #data = browser.find_elements_by_xpath('//img')
-
-    # Saving post in a directory
-    #time.sleep(2)
-    #automate_likes(browser=browser)
-    #automate_comment(browser=browser,username=username_instagram)
-    #posts_save(data=data,username_instagram=username_instagram)
+    #automate_likes(browser=browser)    
+    #data=browser.find_elements_by_xpath('//img')
+    #automate_posts(data=data,username_instagram=username_instagram)
